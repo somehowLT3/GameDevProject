@@ -72,24 +72,26 @@ public class CanyonGenerator : MonoBehaviour
 
         float heightStep = (maxHeight - minHeight) / depth;
 
+        // segment
         for (int z = 0; z < segments; z++)
         {
             float zPos = z * columnLength;
 
+            // layer
             for (int d = 0; d < depth; d++)
             {
-                // --- Height range for this layer
+                // height range for this layer
                 float layerMin = minHeight + heightStep * d;
                 float layerMax = minHeight + heightStep * (d + 1);
 
                 float height = Random.Range(layerMin, layerMax);
 
-                // --- LEFT SIDE
+                // left (-x)
                 float xLeft = -gapFromCenter - d * columnWidth;
 
                 CreateColumn(new Vector3(xLeft, height / 2f, zPos), height);
 
-                // --- RIGHT SIDE
+                // right (+x)
                 float xRight = gapFromCenter + d * columnWidth;
 
                 CreateColumn(new Vector3(xRight, height / 2f, zPos), height);
@@ -99,19 +101,17 @@ public class CanyonGenerator : MonoBehaviour
 
     void TrySpawnTurret(Transform column, Vector3 position, float height)
     {
-        // Must have prefab
         if (turretPrefab == null) return;
 
-        // Check height band
         if (height < turretMinHeight || height > turretMaxHeight)
             return;
 
-        // Spawn turret slightly above column
+        // spawn turret on top of column
         Vector3 turretPos = position + new Vector3(0, height / 2f, 0);
 
         GameObject turret = Instantiate(turretPrefab, turretPos, Quaternion.identity, transform);
 
-        // Optional: align turret facing center
+        // align turret facing middle
         turret.transform.LookAt(new Vector3(0, turretPos.y, position.z));
     }
 
@@ -124,7 +124,7 @@ public class CanyonGenerator : MonoBehaviour
 
         column.transform.parent = transform;
 
-        // --- Color logic
+        // colour gradient from inputs
         if (bottomMaterial != null && topMaterial != null)
         {
             propBlock = new MaterialPropertyBlock();
@@ -138,7 +138,7 @@ public class CanyonGenerator : MonoBehaviour
             renderer.SetPropertyBlock(propBlock);
         }
 
-        // --- TURRET LOGIC (NEW)
+        // spawn turret on random valid positions
         if (position.z > turretStartingZ && Random.value < turretChance)
         {
             TrySpawnTurret(column.transform, position, height);

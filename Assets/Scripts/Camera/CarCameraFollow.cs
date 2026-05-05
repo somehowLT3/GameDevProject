@@ -19,14 +19,7 @@ public class CarCameraFollow : MonoBehaviour
     {
         if (!target) return;
 
-        // --- Always look forward (positive Z)
         transform.rotation = Quaternion.LookRotation(Vector3.forward, Vector3.up);
-
-        // --- Look ahead ONLY in forward direction
-        //float speedZ = rb != null ? rb.linearVelocity.z : 0f;
-        //float lookAheadZ = Mathf.Max(0, speedZ) * 0.2f;
-
-        //Vector3 lookAhead = new Vector3(0, 0, lookAheadZ + forwardLookAhead);
 
         Vector3 speed = rb != null ? rb.linearVelocity : new Vector3(0, 0, 0);
         float lookAheadZ = Mathf.Max(0, speed.z) * 0.2f;
@@ -34,10 +27,9 @@ public class CarCameraFollow : MonoBehaviour
 
         Vector3 lookAhead = new Vector3(lookAheadX, 0, lookAheadZ);
 
-        // --- Desired position (world-based, NOT rotation-based)
         Vector3 desiredPosition = target.position + offset + lookAhead;
 
-        // --- Smooth follow
+        // smooth follow
         transform.position = Vector3.Lerp(
             transform.position,
             desiredPosition,
