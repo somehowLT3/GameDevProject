@@ -1,5 +1,5 @@
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
 public class CarController : MonoBehaviour
@@ -14,20 +14,14 @@ public class CarController : MonoBehaviour
     public float driftFactor = 0.75f; // essent. coeeff of friction
     public float driftControl = 2f;  // how fast sideways slip is corrected (seems to act weird?)
 
-    [Header("Stats")]
-    public int health = 2;
-
-    [Header("Visuals")]
-    public Material materialHealth1;
-    public Material materialHealth2;
-
-    // todo: public list<Material>, private health = size()
+    public List<Material> healthMaterials;
 
     private Renderer carRenderer;
 
     private Rigidbody rb;
     private CarControls controls;
     private Vector2 moveInput;
+    private int health;
 
     void Awake()
     {
@@ -45,6 +39,8 @@ public class CarController : MonoBehaviour
 
         rb.linearDamping = 0;
         rb.angularDamping = 0;
+
+        health = healthMaterials.Count - 1;
 
         carRenderer = GetComponentInChildren<Renderer>();
 
@@ -108,24 +104,14 @@ public class CarController : MonoBehaviour
 
     void ChangeCarMaterial()
     {
-        switch (health)
-        {
-            case 2:
-                carRenderer.material = materialHealth2;
-                break;
-            case 1:
-                carRenderer.material = materialHealth1;
-                break;
-            default:
-                break;
-        }
+        carRenderer.material = healthMaterials[health];
     }
 
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Damage"))
         {
-            health = health - 1;
+            health = Mathf.Max(health - 1, 0);
             ChangeCarMaterial();
         }
     }

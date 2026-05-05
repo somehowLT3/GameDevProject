@@ -9,7 +9,7 @@ public class CannonController : MonoBehaviour
     public float barrelRotateSpeed = 2f;
     public float minBarrelAngle = -10f;
     public float maxBarrelAngle = 45f;
-    public float maxTargetDistance = 10f;
+    public float maxTargetDistance = 40f;
 
     private Quaternion defaultBodyRotation;
     private Quaternion defaultBarrelRotation;
