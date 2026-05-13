@@ -69,8 +69,7 @@ public class CannonController : MonoBehaviour
         }
 
         // spawn slightly in front of barrel
-        Vector3 spawnPos =
-            barrel.position + barrel.forward * 1f;
+        Vector3 spawnPos = barrel.position + barrel.forward * 1f;
 
         // spawn with barrel rotation
         GameObject ball = Instantiate(
@@ -79,9 +78,8 @@ public class CannonController : MonoBehaviour
             barrel.rotation
         );
 
-        Rigidbody rb = ball.GetComponent<Rigidbody>();
-
-        if (rb != null)
+        
+        if (ball.TryGetComponent<Rigidbody>(out var rb))
         {
             // fire exactly where barrel points
             rb.linearVelocity =

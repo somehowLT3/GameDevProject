@@ -16,6 +16,11 @@ public class CarController : MonoBehaviour
 
     public List<Material> healthMaterials;
 
+    [Header("Death")]
+    public GameObject wreckPrefab;
+    public float explosionForce = 500f;
+    public float explosionRadius = 5f;
+
     private Renderer carRenderer;
 
     private Rigidbody rb;
@@ -107,6 +112,33 @@ public class CarController : MonoBehaviour
         carRenderer.material = healthMaterials[health];
     }
 
+    void ExplodeCar()
+    {
+        GameObject wreck = Instantiate(
+            wreckPrefab,
+            transform.position,
+            transform.rotation
+        );
+
+        Rigidbody[] parts =
+            wreck.GetComponentsInChildren<Rigidbody>();
+
+        foreach (Rigidbody rb in parts)
+        {
+            rb.AddExplosionForce(
+                explosionForce,
+                transform.position,
+                explosionRadius
+            );
+
+            rb.AddTorque(
+                Random.insideUnitSphere * explosionForce
+            );
+        }
+
+        Destroy(gameObject);
+    }
+
     void OnHit()
     {
         if (health > 0)
@@ -116,7 +148,8 @@ public class CarController : MonoBehaviour
             return;
         }
 
-        // todo: death effect
+        // death effect
+        ExplodeCar();
     }
 
     void OnCollisionEnter(Collision collision)
