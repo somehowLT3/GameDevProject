@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 7408679341348981712}
   m_Layer: 0
   m_Name: cannonball
-  m_TagString: Untagged
+  m_TagString: Damage
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -186,4 +186,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Cannonball
   explosionRadius: 3
   explosionForce: 500
-  explosionEffect: {fileID: 0}
+  explosionEffect: {fileID: 7494509543549057403, guid: 029bb75df982cf341a556f0a0c3f1add, type: 3}

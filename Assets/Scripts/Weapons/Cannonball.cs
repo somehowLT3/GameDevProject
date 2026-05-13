@@ -5,6 +5,7 @@ public class Cannonball : MonoBehaviour
     public float explosionRadius = 3f;
     public float explosionForce = 500f;
     public GameObject explosionEffect;
+    public GameObject explosionDamagePrefab;
 
     void OnCollisionEnter(Collision collision)
     {
@@ -13,21 +14,32 @@ public class Cannonball : MonoBehaviour
 
     void Explode()
     {
-        //Collider[] hits = Physics.OverlapSphere(transform.position, explosionRadius/4);
+        Collider[] hits = Physics.OverlapSphere(transform.position, explosionRadius/4);
 
-        //foreach (Collider hit in hits)
-        //{
-        //    Rigidbody rb = hit.GetComponent<Rigidbody>();
+        foreach (Collider hit in hits)
+        {
+            bool doesHit = hit.TryGetComponent<Rigidbody>(out var rb);
+            if (doesHit)
+            {
+                rb.AddExplosionForce(explosionForce, transform.position, explosionRadius);
+            }
+        }
 
-        //    if (rb != null)
-        //    {
-        //        rb.AddExplosionForce(explosionForce, transform.position, explosionRadius);
-        //    }
-        //}
+        if (explosionEffect != null)
+            Instantiate(explosionEffect, transform.position, Quaternion.identity);
 
-        //if (explosionEffect != null)
-        //    Instantiate(explosionEffect, transform.position, Quaternion.identity);
+        if (explosionDamagePrefab != null)
+        {
+            GameObject damageArea = Instantiate(
+                explosionDamagePrefab,
+                transform.position,
+                Quaternion.identity
+            );
 
-        //Destroy(gameObject);
+            damageArea.transform.localScale =
+                Vector3.one * explosionRadius;
+        }
+
+        Destroy(gameObject);
     }
 }

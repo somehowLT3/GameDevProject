@@ -61,24 +61,32 @@ public class CannonController : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, target.position);
 
-        // re-check range
+        // check range
         if (distance > maxTargetDistance)
         {
             isFiring = false;
             yield break;
         }
 
-        // predict target position
-        Vector3 predictedPos = PredictTargetPosition();
+        // spawn slightly in front of barrel
+        Vector3 spawnPos =
+            barrel.position + barrel.forward * 1f;
 
-        // spawn projectile
-        GameObject ball = Instantiate(cannonballPrefab, barrel.position, Quaternion.identity);
+        // spawn with barrel rotation
+        GameObject ball = Instantiate(
+            cannonballPrefab,
+            spawnPos,
+            barrel.rotation
+        );
 
         Rigidbody rb = ball.GetComponent<Rigidbody>();
 
-        Vector3 direction = (predictedPos - barrel.position).normalized;
-
-        rb.linearVelocity = direction * projectileSpeed;
+        if (rb != null)
+        {
+            // fire exactly where barrel points
+            rb.linearVelocity =
+                barrel.forward * projectileSpeed;
+        }
 
         isFiring = false;
     }
@@ -87,36 +95,66 @@ public class CannonController : MonoBehaviour
     {
         if (target == null) return;
 
-        // get distance to target
-        float distanceToTarget = Vector3.Distance(transform.position, target.position);
+        // predict future target position
+        Vector3 predictedPos = PredictTargetPosition();
+
+        // distance check
+        float distanceToTarget = Vector3.Distance(transform.position, predictedPos);
 
         if (distanceToTarget <= maxTargetDistance)
         {
             if (!isFiring)
                 StartCoroutine(FireRoutine());
 
-            // rotate body (y only)
-            Vector3 directionToTarget = target.position - transform.position;
-            directionToTarget.y = 0; // only horizontally
+
+            // body rotation
+
+            Vector3 directionToTarget = predictedPos - transform.position;
+
+            directionToTarget.y = 0;
+
             if (directionToTarget.sqrMagnitude > 0.001f)
             {
                 Quaternion targetBodyRotation = Quaternion.LookRotation(directionToTarget);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetBodyRotation, bodyRotateSpeed * Time.deltaTime);
+
+                transform.rotation = Quaternion.Slerp(
+                    transform.rotation,
+                    targetBodyRotation,
+                    bodyRotateSpeed * Time.deltaTime
+                );
             }
 
-            // barrel (x only)
-            Vector3 localTargetDir = barrel.parent.InverseTransformPoint(target.position);
+
+            // barrel rotation
+
+            Vector3 localTargetDir = barrel.parent.InverseTransformPoint(predictedPos);
+
             float targetAngle = Mathf.Atan2(localTargetDir.y, localTargetDir.z) * Mathf.Rad2Deg;
+
             targetAngle = Mathf.Clamp(targetAngle, minBarrelAngle, maxBarrelAngle);
 
             Quaternion barrelRotation = Quaternion.Euler(targetAngle, 0, 0);
-            barrel.localRotation = Quaternion.Slerp(barrel.localRotation, barrelRotation, barrelRotateSpeed * Time.deltaTime);
+
+            barrel.localRotation = Quaternion.Slerp(
+                barrel.localRotation,
+                barrelRotation,
+                barrelRotateSpeed * Time.deltaTime
+            );
         }
         else
         {
             // return to default rotations
-            transform.rotation = Quaternion.Slerp(transform.rotation, defaultBodyRotation, bodyRotateSpeed * Time.deltaTime);
-            barrel.localRotation = Quaternion.Slerp(barrel.localRotation, defaultBarrelRotation, barrelRotateSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                defaultBodyRotation,
+                bodyRotateSpeed * Time.deltaTime
+            );
+
+            barrel.localRotation = Quaternion.Slerp(
+                barrel.localRotation,
+                defaultBarrelRotation,
+                barrelRotateSpeed * Time.deltaTime
+            );
         }
     }
 }

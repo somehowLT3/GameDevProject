@@ -107,12 +107,31 @@ public class CarController : MonoBehaviour
         carRenderer.material = healthMaterials[health];
     }
 
+    void OnHit()
+    {
+        if (health > 0)
+        {
+            health = health - 1;
+            ChangeCarMaterial();
+            return;
+        }
+
+        // todo: death effect
+    }
+
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Damage"))
         {
-            health = Mathf.Max(health - 1, 0);
-            ChangeCarMaterial();
+            OnHit();
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Damage"))
+        {
+            OnHit();
         }
     }
 

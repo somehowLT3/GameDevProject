@@ -75,5 +75,42 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 063c935ceda8df142a6dae28cb46677b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -4010343038748518759}
   m_SourcePrefab: {fileID: 100100000, guid: 063c935ceda8df142a6dae28cb46677b, type: 3}
+--- !u!1 &5548843469865214969 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 063c935ceda8df142a6dae28cb46677b, type: 3}
+  m_PrefabInstance: {fileID: 4737815865519693480}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-4010343038748518759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5548843469865214969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c3910f380301a040862f502d92a38b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CannonController
+  barrel: {fileID: 6610391791317779207}
+  target: {fileID: 4349430566402908250, guid: 1dba56093941f0342aa93e3a0d705ccd, type: 3}
+  bodyRotateSpeed: 2
+  barrelRotateSpeed: 2
+  minBarrelAngle: 10
+  maxBarrelAngle: 45
+  maxTargetDistance: 40
+  cannonballPrefab: {fileID: 7018285716943957895, guid: a37ffebf50f399741b93b5613f84879c, type: 3}
+  fireDelay: 1.5
+  projectileSpeed: 20
+  explosionRadius: 3
+  explosionForce: 500
+--- !u!4 &6610391791317779207 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -7314745045437555281, guid: 063c935ceda8df142a6dae28cb46677b, type: 3}
+  m_PrefabInstance: {fileID: 4737815865519693480}
+  m_PrefabAsset: {fileID: 0}
