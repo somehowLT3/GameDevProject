@@ -165,6 +165,12 @@ public class CarController : MonoBehaviour
         if (other.CompareTag("Damage"))
         {
             OnHit();
+            return;
+        }
+
+        if (other.CompareTag("Finish"))
+        {
+            Debug.Log("LEVEL COMPLETE");
         }
     }
 

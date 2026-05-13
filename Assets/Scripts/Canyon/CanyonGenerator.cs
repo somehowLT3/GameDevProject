@@ -43,10 +43,11 @@ public class CanyonGenerator : MonoBehaviour
     [Header("Visual")]
     public Material topMaterial;
     public Material bottomMaterial;
+    public Material finishMaterial;
 
     [Header("Turrets")]
     public GameObject turretPrefab;
-    public float turretStartingZ = 20f;
+    public float turretStartingZ = 40f;
     public float turretMinHeight = 3f;
     public float turretMaxHeight = 6f;
     public float turretChance = 0.25f;
@@ -69,6 +70,14 @@ public class CanyonGenerator : MonoBehaviour
     public void Generate()
     {
         Clear();
+
+        segments = GameSettings.segments;
+        depth = GameSettings.depth;
+
+        turretChance = GameSettings.turretChance;
+
+        minHeight = GameSettings.minHeight;
+        maxHeight = GameSettings.maxHeight;
 
         float heightStep = (maxHeight - minHeight) / depth;
 
@@ -97,6 +106,59 @@ public class CanyonGenerator : MonoBehaviour
                 CreateColumn(new Vector3(xRight, height / 2f, zPos), height);
             }
         }
+
+        CreateFinishLine();
+    }
+
+    void CreateFinishLine()
+    {
+        GameObject finish = GameObject.CreatePrimitive(PrimitiveType.Cube);
+
+        finish.name = "FinishLine";
+
+        float width = gapFromCenter * 2f;
+
+        finish.transform.position = new Vector3(
+            0,
+            1f,
+            segments * columnLength
+        );
+
+        finish.transform.localScale = new Vector3(width, 2f, 1f);
+
+        BoxCollider col = finish.GetComponent<BoxCollider>();
+        col.isTrigger = true;
+
+        // make trigger invisible
+        Renderer renderer = finish.GetComponent<Renderer>();
+        renderer.enabled = false;
+
+        finish.tag = "Finish";
+
+        finish.transform.parent = transform;
+
+        // visual
+
+        GameObject visual = GameObject.CreatePrimitive(PrimitiveType.Cube);
+
+        Renderer visualRenderer = visual.GetComponent<Renderer>();
+
+        if (finishMaterial != null)
+        {
+            visualRenderer.sharedMaterial = finishMaterial;
+        }
+
+        visual.name = "FinishVisual";
+
+        visual.transform.position = new Vector3(
+            0,
+            0.05f,
+            segments * columnLength
+        );
+
+        visual.transform.localScale = new Vector3(width, 0.1f, 3f);
+
+        visual.transform.parent = transform;
     }
 
     void TrySpawnTurret(Transform column, Vector3 position, float height)
