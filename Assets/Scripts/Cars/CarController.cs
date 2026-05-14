@@ -50,7 +50,8 @@ public class CarController : MonoBehaviour
         rb.linearDamping = 0;
         rb.angularDamping = 0;
 
-        health = healthMaterials.Count - 1;
+        // max lives (safe material check)
+        health = Mathf.Min(GameSettings.maxLives, healthMaterials.Count - 1);
 
         carRenderer = GetComponentInChildren<Renderer>();
 
@@ -179,7 +180,8 @@ public class CarController : MonoBehaviour
 
         if (other.CompareTag("Finish"))
         {
-            Debug.Log("LEVEL COMPLETE");
+            FindFirstObjectByType<UIManager>().ShowSuccessScreen();
+            controls.Disable();
         }
     }
 

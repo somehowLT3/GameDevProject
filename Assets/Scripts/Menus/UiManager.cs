@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 {
     public GameObject failPanel;
+    public GameObject successPanel;
 
     [Header("Death Timing")]
     public float slowMotionScale = 0.2f;
@@ -13,6 +14,11 @@ public class UIManager : MonoBehaviour
     public void ShowFailScreen()
     {
         StartCoroutine(FailSequence());
+    }
+
+    public void ShowSuccessScreen()
+    {
+        successPanel.SetActive(true);
     }
 
     System.Collections.IEnumerator FailSequence()
