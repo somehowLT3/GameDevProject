@@ -17,15 +17,14 @@ public class UIManager : MonoBehaviour
 
     System.Collections.IEnumerator FailSequence()
     {
-        // slow motion immediately
+        // slow motion
         Time.timeScale = slowMotionScale;
 
-        // wait before showing UI
+        // delay ui
         yield return new WaitForSecondsRealtime(failScreenDelay);
 
         failPanel.SetActive(true);
 
-        // wait before restoring time
         yield return new WaitForSecondsRealtime(restoreTimeDelay);
 
         Time.timeScale = 1f;

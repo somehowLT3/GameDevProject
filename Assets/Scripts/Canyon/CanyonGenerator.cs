@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections.Generic;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -52,6 +54,10 @@ public class CanyonGenerator : MonoBehaviour
     public float turretMaxHeight = 6f;
     public float turretChance = 0.25f;
 
+    [Header("Spikes")]
+    public List<GameObject> spikePrefabs;
+    public float spikeChance = 0.05f;
+
     private MaterialPropertyBlock propBlock;
 
     void OnEnable()
@@ -75,12 +81,13 @@ public class CanyonGenerator : MonoBehaviour
         depth = GameSettings.depth;
 
         turretChance = GameSettings.turretChance;
+        spikeChance = GameSettings.spikeChance;
 
         minHeight = GameSettings.minHeight;
         maxHeight = GameSettings.maxHeight;
 
-        turretMinHeight = Mathf.Max(minHeight*1.5f, 2f);
-        turretMaxHeight = Mathf.Min(maxHeight*0.8f, maxHeight - 2f);
+        turretMinHeight = Mathf.Max(minHeight * 1.5f, 2f);
+        turretMaxHeight = Mathf.Min(maxHeight * 0.8f, maxHeight - 2f);
 
         float heightStep = (maxHeight - minHeight) / depth;
 
@@ -108,10 +115,53 @@ public class CanyonGenerator : MonoBehaviour
 
                 CreateColumn(new Vector3(xRight, height / 2f, zPos), height);
             }
+
+            TrySpawnSpikeRow(zPos);
         }
 
         CreateStartLine();
         CreateFinishLine();
+    }
+
+    void TrySpawnSpikeRow(float zPos)
+    {
+
+        if (spikePrefabs.Count == 0)
+            return;
+
+        // only if above chance
+        if (Random.value > spikeChance)
+            return;
+
+        // start after start line
+        if (zPos < columnLength * 6)
+            return;
+
+        // random x pos
+        float xPos = Random.Range(
+            -gapFromCenter + 1f,
+            gapFromCenter - 1f
+        );
+
+        Vector3 spikePos = new(xPos, 0f, zPos);
+
+        //get random spike prefab
+        GameObject spike = Instantiate(
+            spikePrefabs[Random.Range(0, spikePrefabs.Count)],
+            spikePos,
+            Quaternion.identity,
+            transform
+        );
+
+        // random rotation
+        spike.transform.rotation = Quaternion.Euler(
+            0,
+            Random.Range(0f, 360f),
+            0
+        );
+
+        // make damaging
+        spike.tag = "Damage";
     }
 
     void CreateStartLine()
