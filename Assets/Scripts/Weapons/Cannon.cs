@@ -50,8 +50,10 @@ public class CannonController : MonoBehaviour
     {
         isFiring = true;
 
+        float randomDelay = Random.Range(fireDelay*0.75f, fireDelay * 1.25f);
+
         // wait before firing
-        yield return new WaitForSeconds(fireDelay);
+        yield return new WaitForSeconds(randomDelay);
 
         if (target == null)
         {

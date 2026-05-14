@@ -10,22 +10,16 @@ public class MainMenu : MonoBehaviour
     {
         switch (difficultyDropdown.value)
         {
-            // easy
             case 0:
-                GameSettings.turretChance = 0.1f;
-                GameSettings.segments = 40;
+                GameSettings.SetDifficultyEasy();
                 break;
 
-            // meduim
             case 1:
-                GameSettings.turretChance = 0.25f;
-                GameSettings.segments = 60;
+                GameSettings.SetDifficultyMedium();
                 break;
 
-            // hard
             case 2:
-                GameSettings.turretChance = 0.5f;
-                GameSettings.segments = 80;
+                GameSettings.SetDifficultyHard();
                 break;
         }
 

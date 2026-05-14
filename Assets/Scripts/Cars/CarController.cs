@@ -21,6 +21,11 @@ public class CarController : MonoBehaviour
     public float explosionForce = 500f;
     public float explosionRadius = 5f;
 
+    [Header("Damage")]
+    public float damageCooldown = 0.5f;
+
+    private float lastHitTime = -999f;
+
     private Renderer carRenderer;
 
     private Rigidbody rb;
@@ -65,14 +70,10 @@ public class CarController : MonoBehaviour
     {
         float forwardInput = moveInput.y;
 
-        Vector3 forwardVelocity = transform.forward * forwardInput * acceleration;
-
         Vector3 velocity = rb.linearVelocity;
 
         // modify forward component only
         float currentForwardSpeed = Vector3.Dot(velocity, transform.forward);
-
-        float targetSpeed = forwardInput > 0 ? maxSpeed : reverseSpeed;
 
         float newForwardSpeed = Mathf.Clamp(
             currentForwardSpeed + forwardInput * acceleration * Time.fixedDeltaTime,
@@ -141,15 +142,23 @@ public class CarController : MonoBehaviour
 
     void OnHit()
     {
+        // stop instant damage twice
+        if (Time.time < lastHitTime + damageCooldown)
+            return;
+
+        lastHitTime = Time.time;
+
         if (health > 0)
         {
-            health = health - 1;
+            health -= 1;
             ChangeCarMaterial();
             return;
         }
 
         // death effect
         ExplodeCar();
+
+        FindFirstObjectByType<UIManager>().ShowFailScreen();
     }
 
     void OnCollisionEnter(Collision collision)

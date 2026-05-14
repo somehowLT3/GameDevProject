@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Cannonball : MonoBehaviour
 {
-    public float explosionRadius = 3f;
+    public float explosionRadius = 10f;
     public float explosionForce = 500f;
     public GameObject explosionEffect;
     public GameObject explosionDamagePrefab;
@@ -36,8 +36,7 @@ public class Cannonball : MonoBehaviour
                 Quaternion.identity
             );
 
-            damageArea.transform.localScale =
-                Vector3.one * explosionRadius;
+            damageArea.transform.localScale = Vector3.one * explosionRadius;
         }
 
         Destroy(gameObject);

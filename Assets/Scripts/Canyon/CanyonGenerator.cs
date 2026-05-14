@@ -30,15 +30,15 @@ public class CanyonGenerator : MonoBehaviour
     public int depth = 3;
 
     [Header("Column Size")]
-    public float columnWidth = 1f;
-    public float columnLength = 5f;
+    public float columnWidth = 1.5f;
+    public float columnLength = 3f;
 
     [Header("Height Range")]
     public float minHeight = 2f;
     public float maxHeight = 8f;
 
     [Header("Spacing")]
-    public float gapFromCenter = 5f;
+    public float gapFromCenter = 10f;
 
     [Header("Visual")]
     public Material topMaterial;
@@ -79,6 +79,9 @@ public class CanyonGenerator : MonoBehaviour
         minHeight = GameSettings.minHeight;
         maxHeight = GameSettings.maxHeight;
 
+        turretMinHeight = Mathf.Max(minHeight*1.5f, 2f);
+        turretMaxHeight = Mathf.Min(maxHeight*0.8f, maxHeight - 2f);
+
         float heightStep = (maxHeight - minHeight) / depth;
 
         // segment
@@ -107,7 +110,35 @@ public class CanyonGenerator : MonoBehaviour
             }
         }
 
+        CreateStartLine();
         CreateFinishLine();
+    }
+
+    void CreateStartLine()
+    {
+        GameObject visual = GameObject.CreatePrimitive(PrimitiveType.Cube);
+
+        // remove collider without destroying object
+        DestroyImmediate(visual.GetComponent<Collider>());
+
+        Renderer visualRenderer = visual.GetComponent<Renderer>();
+
+        if (finishMaterial != null)
+        {
+            visualRenderer.sharedMaterial = finishMaterial;
+        }
+
+        visual.name = "StartVisual";
+
+        visual.transform.position = new Vector3(
+            0,
+            0.05f,
+            columnLength * 5
+        );
+
+        visual.transform.localScale = new Vector3(gapFromCenter * 2f, 0.1f, 3f);
+
+        visual.transform.parent = transform;
     }
 
     void CreateFinishLine()
@@ -140,6 +171,9 @@ public class CanyonGenerator : MonoBehaviour
         // visual
 
         GameObject visual = GameObject.CreatePrimitive(PrimitiveType.Cube);
+
+        // remove collider without destroying object
+        DestroyImmediate(visual.GetComponent<Collider>());
 
         Renderer visualRenderer = visual.GetComponent<Renderer>();
 
