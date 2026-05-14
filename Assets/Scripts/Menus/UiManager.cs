@@ -19,6 +19,10 @@ public class UIManager : MonoBehaviour
     public void ShowSuccessScreen()
     {
         successPanel.SetActive(true);
+        if (GameSettings.turretChance > 0.1f)
+        {
+            GameSettings.hardCompletions++;
+        }
     }
 
     System.Collections.IEnumerator FailSequence()

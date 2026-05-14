@@ -1,10 +1,12 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
     public TMP_Dropdown difficultyDropdown;
+    public Toggle sportsToggle;
 
     public void StartGame()
     {
@@ -24,5 +26,22 @@ public class MainMenu : MonoBehaviour
         }
 
         SceneManager.LoadScene("Level");
+    }
+
+    void Start()
+    {
+        sportsToggle.isOn = GameSettings.useSportsCar;
+
+        if (GameSettings.hardCompletions > 0)
+        {
+            sportsToggle.interactable = true;
+            return;
+        }
+        sportsToggle.interactable = false;
+    }
+
+    public void ToggleSportsCar(bool value)
+    {
+        GameSettings.useSportsCar = value;
     }
 }

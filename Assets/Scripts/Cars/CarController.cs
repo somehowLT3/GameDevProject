@@ -4,6 +4,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class CarController : MonoBehaviour
 {
+    public bool isSportsCar = false;
+
     [Header("Speed")]
     public float acceleration = 25f;
     public float maxSpeed = 20f;
@@ -44,6 +46,12 @@ public class CarController : MonoBehaviour
 
     void Start()
     {
+        if (GameSettings.useSportsCar != isSportsCar)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         controls.Driving.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
         controls.Driving.Move.canceled += ctx => moveInput = Vector2.zero;
 
@@ -51,9 +59,7 @@ public class CarController : MonoBehaviour
         rb.angularDamping = 0;
 
         // max lives (safe material check)
-        health = Mathf.Min(GameSettings.maxLives, healthMaterials.Count - 1);
-
-        carRenderer = GetComponentInChildren<Renderer>();
+        health = Mathf.Min(GameSettings.maxLives, healthMaterials.Count);
 
         carRenderer = GetComponentInChildren<Renderer>();
 
@@ -122,8 +128,7 @@ public class CarController : MonoBehaviour
             transform.rotation
         );
 
-        Rigidbody[] parts =
-            wreck.GetComponentsInChildren<Rigidbody>();
+        Rigidbody[] parts = wreck.GetComponentsInChildren<Rigidbody>();
 
         foreach (Rigidbody rb in parts)
         {

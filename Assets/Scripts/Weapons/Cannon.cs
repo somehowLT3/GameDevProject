@@ -3,7 +3,8 @@ using UnityEngine;
 public class CannonController : MonoBehaviour
 {
     public Transform barrel;
-    public Transform target;
+    public Transform target1;
+    public Transform target2;
     public float bodyRotateSpeed = 2f;
     public float barrelRotateSpeed = 2f;
     public float minBarrelAngle = -10f;
@@ -22,6 +23,12 @@ public class CannonController : MonoBehaviour
 
     private Rigidbody targetRb;
     private bool isFiring;
+    private Transform target;
+     void Awake()
+    {
+        // choose target based on settings
+        target = GameSettings.useSportsCar ? target2 : target1;
+    }
 
     void Start()
     {
