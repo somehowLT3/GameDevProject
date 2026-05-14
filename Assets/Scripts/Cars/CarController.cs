@@ -111,7 +111,7 @@ public class CarController : MonoBehaviour
 
     void ChangeCarMaterial()
     {
-        carRenderer.material = healthMaterials[health];
+        carRenderer.material = healthMaterials[health -1];
     }
 
     void ExplodeCar()
@@ -149,7 +149,7 @@ public class CarController : MonoBehaviour
 
         lastHitTime = Time.time;
 
-        if (health > 0)
+        if (health > 1)
         {
             health -= 1;
             ChangeCarMaterial();

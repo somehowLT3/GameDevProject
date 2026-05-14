@@ -23,7 +23,7 @@ public static class GameSettings
         maxHeight = 6f;
         minHeight = 1f;
         spikeChance = 0.05f;
-        maxLives = 3;
+        maxLives = 2;
     }
 
     public static void SetDifficultyMedium()
@@ -34,7 +34,7 @@ public static class GameSettings
         maxHeight = 10f;
         minHeight = 2f;
         spikeChance = 0.1f;
-        maxLives = 4;
+        maxLives = 3;
     }
 
     public static void SetDifficultyHard()
@@ -45,6 +45,6 @@ public static class GameSettings
         maxHeight = 18f;
         minHeight = 2f;
         spikeChance = 0.15f;
-        maxLives = 5;
+        maxLives = 4;
     }
 }
